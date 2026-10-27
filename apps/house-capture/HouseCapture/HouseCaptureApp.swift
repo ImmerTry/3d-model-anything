@@ -63,7 +63,7 @@ struct HomeView: View {
             NavigationLink(value: house.id) {
               VStack(alignment: .leading, spacing: 14) {
                 HStack {
-                  FieldworkEyebrow(text: String(format: "%02d / HOUSE", number + 1))
+                  FieldworkEyebrow(text: String(format: NSLocalizedString("%02d / HOUSE", comment: ""), number + 1))
                   Spacer()
                   Image(systemName: "arrow.up.right").foregroundStyle(Fieldwork.orange)
                 }
@@ -231,10 +231,11 @@ private struct HouseRow: View {
 
   private var summary: String {
     let rooms = house.rooms.count, sessions = house.sessions.count
-    var s = "\(rooms) room\(rooms == 1 ? "" : "s") · \(sessions) session\(sessions == 1 ? "" : "s")"
-    if house.zones.count > 1 { s += " · \(house.zones.count) areas" }
-    if let last = house.sessions.map(\.startedAt).max() { s += " · last \(last.formatted(date: .abbreviated, time: .shortened))" }
-    return s
+    var parts = [rooms == 1 ? String(localized: "1 room") : String(localized: "\(rooms) rooms"),
+                 sessions == 1 ? String(localized: "1 session") : String(localized: "\(sessions) sessions")]
+    if house.zones.count > 1 { parts.append(String(localized: "\(house.zones.count) areas")) }
+    if let last = house.sessions.map(\.startedAt).max() { parts.append(String(localized: "last \(last.formatted(date: .abbreviated, time: .shortened))")) }
+    return parts.joined(separator: " · ")
   }
 }
 
