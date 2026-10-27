@@ -244,3 +244,17 @@
 
 /* 房屋编号眉标 */
 "%02d / HOUSE" = "%02d 号房屋";
+
+/* 同步到大屏 */
+"Sync to big screen" = "同步到大屏";
+"Scan the big screen QR code" = "扫描大屏二维码";
+"Point the camera at the QR code on the big screen" = "将手机对准大屏上的二维码";
+"Packing…" = "正在打包…";
+"Uploading… %lld%%" = "正在上传… %lld%%";
+"Sync complete" = "同步成功";
+"The big screen is loading the new model." = "大屏正在加载新模型。";
+"Sync failed" = "同步失败";
+"Scan again" = "重新扫描";
+"Invalid QR code" = "二维码无效";
+"This QR code is not a big screen upload code." = "这个二维码不是大屏上传二维码。";
+"Upload failed" = "上传失败";
