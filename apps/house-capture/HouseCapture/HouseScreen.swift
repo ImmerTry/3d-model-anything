@@ -107,7 +107,7 @@ struct HouseScreen: View {
       LazyVStack(alignment: .leading, spacing: 0) {
         VStack(alignment: .leading, spacing: 8) {
           Text(house.name).font(.largeTitle.weight(.bold)).tracking(-1)
-          Text("\(house.rooms.count) room\(house.rooms.count == 1 ? "" : "s")")
+          Text(house.rooms.count == 1 ? "1 room" : "\(house.rooms.count) rooms")
             .font(.title3).foregroundStyle(Fieldwork.secondary)
         }.padding(.top, 12).padding(.bottom, 28)
         FieldworkRule()
