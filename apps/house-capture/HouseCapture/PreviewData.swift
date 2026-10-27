@@ -101,7 +101,8 @@ struct PreviewSource {
     let hidden = Set(sessions.filter { !$0.aligned && $0.index != sessions.first?.index }.map(\.index))
     let n = rooms.count
     return PreviewSource(title: house.name,
-                         subtitle: "\(n) room\(n == 1 ? "" : "s") · \(sessions.count) session\(sessions.count == 1 ? "" : "s")",
+                         subtitle: [n == 1 ? String(localized: "1 room") : String(localized: "\(n) rooms"),
+                                    sessions.count == 1 ? String(localized: "1 session") : String(localized: "\(sessions.count) sessions")].joined(separator: " · "),
                          sessions: sessions, rooms: rooms, hiddenSessions: hidden)
   }
 
@@ -114,7 +115,7 @@ struct PreviewSource {
     let deleted = house.deletedRooms.flatMap { $0.room.history }.filter { $0.session == session.id }
     let rooms = roomsInBundle(s).filter { room in !deleted.contains { $0.index == room.index } }
     return PreviewSource(title: s.title,
-                         subtitle: "\(rooms.count) room\(rooms.count == 1 ? "" : "s") · \(s.alignment)",
+                         subtitle: (rooms.count == 1 ? String(localized: "1 room") : String(localized: "\(rooms.count) rooms")) + " · \(s.alignment)",
                          sessions: [s], rooms: rooms)
   }
 
