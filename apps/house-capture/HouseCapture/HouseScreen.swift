@@ -24,6 +24,7 @@ struct HouseScreen: View {
   @State private var permanentRoomID: String?
   @State private var deletingRoom: HouseProject.Room?
   @State private var sharing: URL?
+  @State private var syncingHouse: HouseProject?
   @State private var busy: String?
   @State private var error: String?
   @State private var deletingSession: HouseProject.Session?
@@ -46,6 +47,7 @@ struct HouseScreen: View {
         if let house {
           Menu {
             Button("Share whole house", systemImage: "square.and.arrow.up") { share(house.url, name: house.name) }
+            Button("Sync to big screen", systemImage: "qrcode") { syncingHouse = house }
             NavigationLink("Preview house in 3D") { HousePreviews.house(house) }
           } label: { Image(systemName: "ellipsis").frame(width: 44, height: 44) }.accessibilityLabel("House options")
         }
@@ -98,6 +100,7 @@ struct HouseScreen: View {
       }
     } message: { Text("This cannot be undone. Shared recordings needed by other rooms are kept.") }
     .sheet(item: $sharing) { url in ShareSheet(items: [url]) }
+    .sheet(item: $syncingHouse) { BigScreenSyncView(house: $0) }
   }
 
   // MARK: sections
