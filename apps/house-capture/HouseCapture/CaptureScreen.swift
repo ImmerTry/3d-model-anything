@@ -10,7 +10,7 @@ struct CaptureScreen: View {
   @State private var confirmClose = false
   @FocusState private var nameFocused: Bool
   @Environment(\.scenePhase) private var scenePhase
-  static let roomSuggestions = ["Living room", "Kitchen", "Dining room", "Office", "Bedroom", "Primary bedroom", "Bathroom", "Hallway", "Basement", "Playroom", "Laundry", "Garage"]
+  static let roomSuggestions = ["Living room", "Kitchen", "Dining room", "Office", "Bedroom", "Primary bedroom", "Bathroom", "Hallway", "Basement", "Playroom", "Laundry", "Garage"].map { NSLocalizedString($0, comment: "") }
 
   private var scanning: Bool { controller.phase == .scanning }
 
@@ -62,11 +62,11 @@ struct CaptureScreen: View {
     }
     .confirmationDialog("Leave this session?", isPresented: $confirmClose, titleVisibility: .visible) {
       if !controller.rooms.isEmpty && controller.phase == .betweenRooms {
-        Button("Save \(controller.rooms.count) room\(controller.rooms.count == 1 ? "" : "s") and finish") {
+        Button(controller.rooms.count == 1 ? "Save 1 room and finish" : "Save \(controller.rooms.count) rooms and finish") {
           Task { await controller.finishSession() }
         }
       }
-      Button(controller.rooms.isEmpty ? "Discard session" : "Discard session and its \(controller.rooms.count) room\(controller.rooms.count == 1 ? "" : "s")", role: .destructive) {
+      Button(controller.rooms.isEmpty ? "Discard session" : (controller.rooms.count == 1 ? "Discard session and its 1 room" : "Discard session and its \(controller.rooms.count) rooms"), role: .destructive) {
         controller.abandon()
         onClose()
       }
@@ -118,7 +118,7 @@ struct CaptureScreen: View {
                 .font(.caption2.weight(.semibold))
                 .foregroundStyle(.secondary)
             }
-            Text("\(controller.rooms.count) room\(controller.rooms.count == 1 ? "" : "s") · \(controller.photoCount) photos")
+            Text(controller.rooms.count == 1 ? "1 room · \(controller.photoCount) photos" : "\(controller.rooms.count) rooms · \(controller.photoCount) photos")
               .font(.caption.monospacedDigit())
             if controller.phase != .relocalizing {
               HStack(spacing: 6) {
@@ -202,7 +202,7 @@ struct CaptureScreen: View {
     panel {
       if controller.rooms.isEmpty {
         if controller.alignment.method == "relocalized" {
-          Text("You're lined up with \(controller.zoneName). The faint green is what you scanned before\(controller.priorPhotoCount > 0 ? "; surfaces its \(controller.priorPhotoCount) photos already cover start out green" : ""). Scan a new room, or rescan one to replace it.")
+          Text("You're lined up with \(controller.zoneName). The faint green is what you scanned before") + (controller.priorPhotoCount > 0 ? Text("; surfaces its \(controller.priorPhotoCount) photos already cover start out green") : Text("")) + Text(". Scan a new room, or rescan one to replace it.")
             .font(.subheadline)
         } else {
           Text("Scan each room once: as you move, a triangle mesh appears. **Green** means good photo coverage, including aligned earlier scans. **Red** needs more photos. Areas without triangles still need scanning. The white outlines are the walls, doors and windows being measured. **Photo detail** measures photography on surfaces already seen by LiDAR; it is not the percentage of the room scanned. Save and review for missing areas.")
@@ -213,7 +213,9 @@ struct CaptureScreen: View {
           .frame(height: 150)
           .frame(maxWidth: .infinity)
         if let last = controller.rooms.last {
-          Text("\(last.name): \(last.photographedPercent.map { "\($0)% photo detail" } ?? "not measured") · \(last.detailPhotos ?? 0) photos\(last.mesh == nil ? " · no mesh" : "")")
+          (last.photographedPercent.map { pct in
+            Text("\(last.name): \(pct)% photo detail · \(last.detailPhotos ?? 0) photos")
+          } ?? Text("\(last.name): not measured · \(last.detailPhotos ?? 0) photos")) + (last.mesh == nil ? Text(" · no mesh") : Text(""))
             .font(.footnote)
         }
         Button("Review saved room in 3D") { reviewing = true }.buttonStyle(.borderedProminent)
