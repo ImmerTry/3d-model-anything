@@ -57,10 +57,10 @@ final class PLYMesh: @unchecked Sendable {
     case notPLY, unsupported(String), truncated, empty
     var errorDescription: String? {
       switch self {
-      case .notPLY: "Not a PLY file"
-      case .unsupported(let what): "Unsupported PLY: \(what)"
-      case .truncated: "The PLY file is truncated"
-      case .empty: "The mesh is empty"
+      case .notPLY: NSLocalizedString("Not a PLY file", comment: "")
+      case .unsupported(let what): String(format: NSLocalizedString("Unsupported PLY: %@", comment: ""), what)
+      case .truncated: NSLocalizedString("The PLY file is truncated", comment: "")
+      case .empty: NSLocalizedString("The mesh is empty", comment: "")
       }
     }
   }
