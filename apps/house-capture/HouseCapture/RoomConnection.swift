@@ -92,11 +92,11 @@ struct RoomConnection: View {
       if let candidate { NavigationStack { HouseViewer(house: candidate).toolbar { Button("Done") { previewing = false } } } }
     }
   }
-  private func doorPicker(_ title: String, doors: [RoomDoor], selection: Binding<String>) -> some View {
+  private func doorPicker(_ title: LocalizedStringKey, doors: [RoomDoor], selection: Binding<String>) -> some View {
     Picker(title, selection: selection) {
       Text("Choose doorway").tag("")
       ForEach(Array(doors.enumerated()), id: \.element.id) { i, door in
-        Text(String(format: "Doorway %d · %.2f m wide", i+1, door.width)).tag(door.id)
+        Text("Doorway \(i+1) · \(String(format: "%.2f", door.width)) m wide").tag(door.id)
       }
     }
   }
