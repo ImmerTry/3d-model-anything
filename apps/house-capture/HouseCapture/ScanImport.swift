@@ -10,7 +10,7 @@ enum ScanImport {
           manifest.format.hasPrefix("house-capture/"),
           Set(manifest.rooms.map(\.index)).count == manifest.rooms.count,
           manifest.rooms.allSatisfy({ $0.index >= 0 }) else {
-      throw CaptureReadinessError(message: "Choose an extracted 3D Model Anything room or session folder containing manifest.json. In Files, tap the shared ZIP to extract it first.")
+      throw CaptureReadinessError(message: NSLocalizedString("Choose an extracted 3D Model Anything room or session folder containing manifest.json. In Files, tap the shared ZIP to extract it first.", comment: ""))
     }
     let keys: [URLResourceKey] = [.isSymbolicLinkKey, .isRegularFileKey, .isDirectoryKey, .fileSizeKey]
     var enumerationError: Error?
@@ -21,7 +21,7 @@ enum ScanImport {
     for case let file as URL in files {
       let values = try file.resourceValues(forKeys: Set(keys))
       guard values.isSymbolicLink != true, values.isRegularFile == true || values.isDirectory == true else {
-        throw CaptureReadinessError(message: "This folder contains unsupported file links. Import an original 3D Model Anything export.")
+        throw CaptureReadinessError(message: NSLocalizedString("This folder contains unsupported file links. Import an original 3D Model Anything export.", comment: ""))
       }
       bytes += Int64(values.fileSize ?? 0)
     }
