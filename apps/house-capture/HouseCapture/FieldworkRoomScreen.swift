@@ -23,10 +23,10 @@ struct FieldworkRoomScreen: View {
       if let house, let room {
         VStack(alignment: .leading, spacing: 22) {
           VStack(alignment: .leading, spacing: 10) {
-            FieldworkEyebrow(text: "Saved room")
+            FieldworkEyebrow(text: NSLocalizedString("Saved room", comment: ""))
             Text(room.name).font(.largeTitle.weight(.bold)).tracking(-1)
             if let active = room.active {
-              Text("SCANNED " + active.capturedAt.formatted(date: .abbreviated, time: .shortened).uppercased())
+              Text("SCANNED \(active.capturedAt.formatted(date: .abbreviated, time: .shortened).uppercased())")
                 .font(.system(.caption, design: .monospaced)).foregroundStyle(Fieldwork.secondary)
             }
           }
@@ -57,7 +57,7 @@ struct FieldworkRoomScreen: View {
               Label {
                 VStack(alignment: .leading, spacing: 4) {
                   Text("Scan history").foregroundStyle(Fieldwork.ink)
-                  Text("\(room.history.count) saved scan\(room.history.count == 1 ? "" : "s")")
+                  Text(room.history.count == 1 ? "1 saved scan" : "\(room.history.count) saved scans")
                     .font(.caption).foregroundStyle(Fieldwork.secondary)
                 }
               } icon: { Image(systemName: "clock").foregroundStyle(Fieldwork.secondary).frame(width: 28) }
@@ -111,13 +111,13 @@ struct FieldworkRoomScreen: View {
     } message: { Text(error ?? "") }
   }
 
-  private func metric(_ value: String, label: String) -> some View {
+  private func metric(_ value: String, label: LocalizedStringKey) -> some View {
     VStack(alignment: .leading, spacing: 5) {
       Text(value).font(.title2.bold()).monospacedDigit()
       Text(label).font(.system(.caption, design: .monospaced)).foregroundStyle(Fieldwork.secondary)
     }
   }
-  private func actionRow(_ title: String, subtitle: String, icon: String) -> some View {
+  private func actionRow(_ title: LocalizedStringKey, subtitle: LocalizedStringKey, icon: String) -> some View {
     HStack(spacing: 12) {
       Image(systemName: icon).frame(width: 28).font(.title3)
       VStack(alignment: .leading, spacing: 4) {
