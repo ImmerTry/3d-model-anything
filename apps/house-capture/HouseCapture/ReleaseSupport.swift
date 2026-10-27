@@ -17,25 +17,25 @@ enum CaptureReadiness {
   }
   static func checkStorage(available: Int64?, required: Int64) throws {
     if let available, available < required {
-      throw CaptureReadinessError(message: "Not enough storage. Free at least \(ByteCountFormatter.string(fromByteCount: required, countStyle: .file)) on this device, then try again. Saved scans are kept.")
+      throw CaptureReadinessError(message: String(format: NSLocalizedString("Not enough storage. Free at least %@ on this device, then try again. Saved scans are kept.", comment: ""), ByteCountFormatter.string(fromByteCount: required, countStyle: .file)))
     }
   }
   @MainActor static func prepare() async throws {
     guard CaptureController.isSupported else {
-      throw CaptureReadinessError(message: "Scanning needs a LiDAR-equipped iPhone Pro or iPad Pro. You can import, view and share existing scans on this device.")
+      throw CaptureReadinessError(message: NSLocalizedString("Scanning needs a LiDAR-equipped iPhone Pro or iPad Pro. You can import, view and share existing scans on this device.", comment: ""))
     }
     switch AVCaptureDevice.authorizationStatus(for: .video) {
     case .authorized: break
     case .notDetermined:
       guard await AVCaptureDevice.requestAccess(for: .video) else {
-        throw CaptureReadinessError(message: "Camera access is off. Enable Camera for 3D Model Anything in Settings, then try scanning again.")
+        throw CaptureReadinessError(message: NSLocalizedString("Camera access is off. Enable Camera for 3D Model Anything in Settings, then try scanning again.", comment: ""))
       }
     case .denied:
-      throw CaptureReadinessError(message: "Camera access is off. Enable Camera for 3D Model Anything in Settings, then try scanning again.")
+      throw CaptureReadinessError(message: NSLocalizedString("Camera access is off. Enable Camera for 3D Model Anything in Settings, then try scanning again.", comment: ""))
     case .restricted:
-      throw CaptureReadinessError(message: "Camera access is restricted on this device. Check Screen Time or device-management restrictions. You can still import and view scans.")
+      throw CaptureReadinessError(message: NSLocalizedString("Camera access is restricted on this device. Check Screen Time or device-management restrictions. You can still import and view scans.", comment: ""))
     @unknown default:
-      throw CaptureReadinessError(message: "Camera access is unavailable. You can still import and view scans.")
+      throw CaptureReadinessError(message: NSLocalizedString("Camera access is unavailable. You can still import and view scans.", comment: ""))
     }
     let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
     try requireStorage(at: docs)
